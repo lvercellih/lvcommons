@@ -10,4 +10,5 @@ setup(
     description='Funciones comunes que uso en mis proyectos',
     license='MIT',
     packages=find_packages(),
+    zip_safe=False,
 )
