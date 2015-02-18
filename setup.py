@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-from commons import __version__
+from lvcommons import __version__
 
 setup(
     name='lvcommons',
