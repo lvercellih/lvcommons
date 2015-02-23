@@ -11,4 +11,5 @@ setup(
     license='MIT',
     packages=find_packages(),
     zip_safe=False,
+    install_requires=['urllib3', 'certifi']
 )
