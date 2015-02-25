@@ -17,25 +17,38 @@ def raw_request(url, method, data=None, authorization=None, extra_headers=None):
         h['Authorization'] = authorization
     if extra_headers and isinstance(extra_headers, dict):
         h = dict(h, **extra_headers)
-    res = _pool_manager.request(method=method, url=url, fields=data, headers=h)
+    res = _pool_manager.request(method=method, url=url, fields=data, headers=h, encode_multipart=False)
     return res
 
 
-def request(url, method, data=None, authorization=None, extra_headers=None):
+def request(url, method, data=None, authorization=None, extra_headers={}):
     new_headers = dict(extra_headers, Accept='application/json')
     res = raw_request(url, method, data, authorization, new_headers)
     str_res = res.data
-    if hasattr(str_res, 'decode'):
-        str_res = str_res.decode()
-    json_res = json.loads(str_res)
-    return json_res
+    if str_res:
+        if hasattr(str_res, 'decode'):
+            str_res = str_res.decode()
+        json_res = json.loads(str_res)
+        res.json_data = json_res
+    else:
+        res.json_data = None
+    return res
 
 
-def get(url, data=None, authorization=None, extra_headers=None):
+def get(url, data=None, authorization=None, extra_headers={}):
     return request(url, 'GET', data, authorization, extra_headers)
 
 
-def post(url, data=None, authorization=None, extra_headers=None):
+def post(url, data=None, authorization=None, extra_headers={}):
+    return request(url, 'POST', data, authorization, extra_headers)
+
+
+def post_form(url, data=None, authorization=None, extra_headers={}):
+    new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
+    return request(url, 'POST', data, authorization, new_headers)
+
+
+def post_json(url, data=None, authorization=None, extra_headers={}):
     new_headers = dict(extra_headers, **{'Content-Type': 'application/json'})
     return request(url, 'POST', data, authorization, new_headers)
 
