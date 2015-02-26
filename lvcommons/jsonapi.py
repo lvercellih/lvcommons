@@ -5,17 +5,14 @@ from urllib3.util.timeout import Timeout
 _pool_manager = None
 
 
-def setup_pool_manager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where(),
-                       timeout=Timeout(connect=6), retries=10,
+def setup_pool_manager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where(), timeout=Timeout(connect=6), retries=10,
                        **kwargs):
     global _pool_manager
-    _pool_manager = urllib3.PoolManager(cert_reqs=cert_reqs, ca_certs=ca_certs,
-                                        timeout=timeout, retries=retries,
+    _pool_manager = urllib3.PoolManager(cert_reqs=cert_reqs, ca_certs=ca_certs, timeout=timeout, retries=retries,
                                         **kwargs)
 
 
-def raw_request(url, method, data=None, authorization=None, extra_headers=None,
-                basic_auth=False):
+def raw_request(url, method, data=None, authorization=None, extra_headers=None, basic_auth=False, **kwargs):
     h = {}
     if authorization:
         if basic_auth:
@@ -24,16 +21,13 @@ def raw_request(url, method, data=None, authorization=None, extra_headers=None,
             h['Authorization'] = authorization
     if extra_headers and isinstance(extra_headers, dict):
         h = dict(h, **extra_headers)
-    res = _pool_manager.request(method=method, url=url, fields=data, headers=h,
-                                encode_multipart=False)
+    res = _pool_manager.request(method=method, url=url, fields=data, headers=h, **kwargs)
     return res
 
 
-def request(url, method, data=None, authorization=None, extra_headers={},
-            basic_auth=False):
+def request(url, method, data=None, authorization=None, extra_headers={}, basic_auth=False, **kwargs):
     new_headers = dict(extra_headers, Accept='application/json')
-    res = raw_request(url, method, data, authorization, new_headers,
-                      basic_auth=basic_auth)
+    res = raw_request(url, method, data, authorization, new_headers, basic_auth=basic_auth, **kwargs)
     str_res = res.data
     if str_res:
         if hasattr(str_res, 'decode'):
@@ -51,37 +45,29 @@ def request(url, method, data=None, authorization=None, extra_headers={},
 
 
 def get(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    return request(url, 'GET', data, authorization, extra_headers,
-                   basic_auth=basic_auth)
+    return request(url, 'GET', data, authorization, extra_headers, basic_auth=basic_auth)
 
 
 def post(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    return request(url, 'POST', data, authorization, extra_headers,
-                   basic_auth=basic_auth)
+    return request(url, 'POST', data, authorization, extra_headers, basic_auth=basic_auth, encode_multipart=False)
 
 
-def post_form(url, data=None, authorization=None, extra_headers={},
-              basic_auth=False):
-    new_headers = dict(extra_headers,
-                       **{'Content-Type': 'application/x-www-form-urlencoded'})
+def post_form(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
+    new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
     return post(url, data, authorization, new_headers, basic_auth=basic_auth)
 
 
-def post_json(url, data=None, authorization=None, extra_headers={},
-              basic_auth=False):
+def post_json(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
     new_headers = dict(extra_headers, **{'Content-Type': 'application/json'})
     return post(url, data, authorization, new_headers, basic_auth=basic_auth)
 
 
 def put(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    return request(url, 'PUT', data, authorization, extra_headers,
-                   basic_auth=basic_auth)
+    return request(url, 'PUT', data, authorization, extra_headers, basic_auth=basic_auth, encode_multipart=False)
 
 
-def put_form(url, data=None, authorization=None, extra_headers={},
-              basic_auth=False):
-    new_headers = dict(extra_headers,
-                       **{'Content-Type': 'application/x-www-form-urlencoded'})
+def put_form(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
+    new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
     return put(url, data, authorization, new_headers, basic_auth=basic_auth)
 
 
