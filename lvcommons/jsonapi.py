@@ -71,4 +71,13 @@ def put_form(url, data=None, authorization=None, extra_headers={}, basic_auth=Fa
     return put(url, data, authorization, new_headers, basic_auth=basic_auth)
 
 
+def delete(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
+    return request(url, 'DELETE', data, authorization, extra_headers, basic_auth=basic_auth)
+
+
+def delete_form(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
+    new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
+    return delete(url, data, authorization, new_headers, basic_auth=basic_auth)
+
+
 setup_pool_manager()
