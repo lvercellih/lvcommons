@@ -49,12 +49,12 @@ def get(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
 
 
 def post(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    return request(url, 'POST', data, authorization, extra_headers, basic_auth=basic_auth, encode_multipart=False)
+    return request(url, 'POST', data, authorization, extra_headers, basic_auth=basic_auth)
 
 
 def post_form(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
-    return post(url, data, authorization, new_headers, basic_auth=basic_auth)
+    # new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
+    return post(url, data, authorization, extra_headers, basic_auth=basic_auth)
 
 
 def post_json(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
@@ -63,12 +63,12 @@ def post_json(url, data=None, authorization=None, extra_headers={}, basic_auth=F
 
 
 def put(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    return request(url, 'PUT', data, authorization, extra_headers, basic_auth=basic_auth, encode_multipart=False)
+    return request(url, 'PUT', data, authorization, extra_headers, basic_auth=basic_auth)
 
 
 def put_form(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
-    return put(url, data, authorization, new_headers, basic_auth=basic_auth)
+    # new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
+    return put(url, data, authorization, extra_headers, basic_auth=basic_auth)
 
 
 def delete(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
@@ -76,8 +76,8 @@ def delete(url, data=None, authorization=None, extra_headers={}, basic_auth=Fals
 
 
 def delete_form(url, data=None, authorization=None, extra_headers={}, basic_auth=False):
-    new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
-    return delete(url, data, authorization, new_headers, basic_auth=basic_auth)
+    # new_headers = dict(extra_headers, **{'Content-Type': 'application/x-www-form-urlencoded'})
+    return delete(url, data, authorization, extra_headers, basic_auth=basic_auth)
 
 
 setup_pool_manager()
